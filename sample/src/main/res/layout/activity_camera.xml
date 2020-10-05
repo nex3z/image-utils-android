@@ -5,10 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.nex3z.android.utils.image.sample.CameraActivity">
+    tools:context=".CameraActivity">
 
-    <androidx.camera.view.PreviewView
-        android:id="@+id/pv_ac_preview"
+    <fragment
+        android:id="@+id/f_ac_camera"
+        android:name="com.nex3z.android.utils.image.sample.CameraFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

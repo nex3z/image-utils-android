@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/f_ac_camera"
-        android:name="com.nex3z.android.utils.image.sample.CameraFragment"
+        android:name="com.nex3z.android.utils.image.camera.CameraFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

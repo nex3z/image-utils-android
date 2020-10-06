@@ -1,4 +1,4 @@
-package com.nex3z.android.utils.image.sample
+package com.nex3z.android.utils.image.camera
 
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -13,6 +13,8 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.nex3z.android.utils.image.R
 import kotlinx.android.synthetic.main.fragment_camera.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -20,13 +22,18 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-
 class CameraFragment : Fragment() {
     private val executor: ExecutorService = Executors.newSingleThreadExecutor()
+    private lateinit var viewModel: CameraViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_camera, container, false)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel = ViewModelProvider(requireActivity()).get(CameraViewModel::class.java)
     }
 
     override fun onResume() {
@@ -81,7 +88,7 @@ class CameraFragment : Fragment() {
         }, ContextCompat.getMainExecutor(requireContext()))
     }
 
-    companion object{
+    companion object {
         private val TAG: String = CameraFragment::class.java.simpleName
         private const val RATIO_4_3_VALUE = 4.0 / 3.0
         private const val RATIO_16_9_VALUE = 16.0 / 9.0

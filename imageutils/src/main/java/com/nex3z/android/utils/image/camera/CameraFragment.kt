@@ -13,7 +13,6 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.nex3z.android.utils.image.R
 import kotlinx.android.synthetic.main.fragment_camera.*
 import java.util.concurrent.ExecutorService
@@ -24,16 +23,11 @@ import kotlin.math.min
 
 class CameraFragment : Fragment() {
     private val executor: ExecutorService = Executors.newSingleThreadExecutor()
-    private lateinit var viewModel: CameraViewModel
+    var analyzer: ImageAnalysis.Analyzer? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_camera, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity()).get(CameraViewModel::class.java)
     }
 
     override fun onResume() {
@@ -70,11 +64,10 @@ class CameraFragment : Fragment() {
                 .setTargetRotation(rotation)
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build()
-                .also {
-                    it.setAnalyzer(executor, { image ->
-                        image.close()
-                    })
-                }
+
+            analyzer?.let {
+                imageAnalysis.setAnalyzer(executor, it)
+            }
 
             cameraProvider.unbindAll()
 

@@ -1,4 +1,4 @@
-package com.nex3z.android.utils.image
+package com.nex3z.android.utils.image.convert
 
 import android.graphics.Bitmap
 import android.graphics.Matrix

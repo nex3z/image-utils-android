@@ -14,4 +14,10 @@
         android:layout_height="wrap_content"
         android:text="Camera"/>
 
+    <Button
+        android:id="@+id/btn_am_histogram"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Histogram"/>
+
 </LinearLayout>

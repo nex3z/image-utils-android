@@ -6,9 +6,9 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.nex3z.android.utils.image.REQUEST_CODE
-import com.nex3z.android.utils.image.hasCameraPermissions
-import com.nex3z.android.utils.image.requestCameraPermissions
+import com.nex3z.android.utils.image.camera.REQUEST_CODE
+import com.nex3z.android.utils.image.camera.hasCameraPermissions
+import com.nex3z.android.utils.image.camera.requestCameraPermissions
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -36,6 +36,9 @@ class MainActivity : AppCompatActivity() {
     private fun initView() {
         btn_am_camera.setOnClickListener {
             Intent(this, CameraActivity::class.java).apply(this::startActivity)
+        }
+        btn_am_histogram.setOnClickListener {
+            Intent(this, HistogramActivity::class.java).apply(this::startActivity)
         }
     }
 

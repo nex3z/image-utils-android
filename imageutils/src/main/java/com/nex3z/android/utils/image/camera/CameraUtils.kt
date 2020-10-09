@@ -1,4 +1,4 @@
-package com.nex3z.android.utils.image
+package com.nex3z.android.utils.image.camera
 
 import android.Manifest
 import android.app.Activity

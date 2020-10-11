@@ -3,13 +3,13 @@ package com.nex3z.android.utils.image.sample
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.nex3z.android.utils.image.camera.REQUEST_CODE
 import com.nex3z.android.utils.image.camera.hasCameraPermissions
 import com.nex3z.android.utils.image.camera.requestCameraPermissions
 import kotlinx.android.synthetic.main.activity_main.*
+import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG, "onRequestPermissionsResult(): Permission granted")
+                Timber.v("onRequestPermissionsResult(): Permission granted")
             } else {
                 Toast.makeText(this, "Camera permission denied", Toast.LENGTH_LONG).show()
             }
@@ -40,9 +40,5 @@ class MainActivity : AppCompatActivity() {
         btn_am_histogram.setOnClickListener {
             Intent(this, HistogramActivity::class.java).apply(this::startActivity)
         }
-    }
-
-    companion object {
-        private val TAG: String = MainActivity::class.java.simpleName
     }
 }

@@ -27,26 +27,13 @@ class HistogramView(
         }
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val contentWidth = if (suggestedMinimumWidth > 256) suggestedMinimumWidth else 256
-        val contentHeight = if (suggestedMinimumHeight > 256) suggestedMinimumHeight else 256
-
-        val desiredWidth = contentWidth + paddingLeft + paddingRight
-        val desiredHeight = contentHeight + paddingTop + paddingBottom
-
-        val widthSpecs = resolveSizeAndState(desiredWidth, widthMeasureSpec, 0)
-        val heightSpecs = resolveSizeAndState(desiredHeight, heightMeasureSpec, 0)
-
-        setMeasuredDimension(widthSpecs, heightSpecs)
-    }
-
     private fun draw(canvas: Canvas, paint: Paint, color: List<Int>) {
         Path().apply {
             moveTo(paddingLeft.toFloat(), height - paddingBottom.toFloat())
 
             val graphWidth = width - paddingLeft - paddingRight
             val graphHeight = height - paddingTop - paddingBottom
-            val maxValue = color.maxOrNull()?.toFloat() ?: return
+            val maxValue = color.max()?.toFloat() ?: return
             val numColor = color.size.toFloat()
 
             for (i in color.indices) {

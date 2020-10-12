@@ -8,17 +8,16 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.fragment.app.Fragment
 import com.nex3z.android.utils.image.camera.CameraFragment
-import com.nex3z.android.utils.image.convert.YuvToRgbConverter
-import com.nex3z.android.utils.image.histogram.HistogramCalculator
-import com.nex3z.android.utils.image.histogram.HistogramCalculator.Companion.createHistBuffer
-import com.nex3z.android.utils.image.histogram.computeHistogram
+import com.nex3z.android.utils.image.convert.RsYuvToRgbConverter
+import com.nex3z.android.utils.image.histogram.RsHistogramCalculator
+import com.nex3z.android.utils.image.histogram.RsHistogramCalculator.Companion.createHistBuffer
 import com.nex3z.android.utils.image.util.Timer
 import kotlinx.android.synthetic.main.activity_histogram.*
 import timber.log.Timber
 
 class HistogramActivity : AppCompatActivity(), ImageAnalysis.Analyzer {
-    private lateinit var rgbConverter: YuvToRgbConverter
-    private lateinit var histCalc: HistogramCalculator
+    private lateinit var rgbConverter: RsYuvToRgbConverter
+    private lateinit var histCalc: RsHistogramCalculator
     private lateinit var imageBuffer: Bitmap
     private val histBuffer: IntArray = createHistBuffer()
 
@@ -37,8 +36,8 @@ class HistogramActivity : AppCompatActivity(), ImageAnalysis.Analyzer {
     }
 
     private fun init() {
-        rgbConverter = YuvToRgbConverter(this)
-        histCalc = HistogramCalculator(this)
+        rgbConverter = RsYuvToRgbConverter(this)
+        histCalc = RsHistogramCalculator(this)
     }
 
     @SuppressLint("UnsafeExperimentalUsageError")
@@ -52,14 +51,13 @@ class HistogramActivity : AppCompatActivity(), ImageAnalysis.Analyzer {
             image.image ?: throw IllegalArgumentException("Image cannot bt null"), imageBuffer)
 
         val timer = Timer()
-//        histCalc.compute(imageBuffer, histBuffer)
-        val hist = imageBuffer.computeHistogram()
+        histCalc.compute(imageBuffer, histBuffer)
         Timber.v("time cost = ${timer.stop()}")
 
         iv_ah_image.post {
             iv_ah_image.setImageBitmap(imageBuffer)
             iv_ah_image.rotation = image.imageInfo.rotationDegrees.toFloat()
-            hv_ah_image.render(hist)
+            hv_ah_image.render(histBuffer)
         }
         image.close()
     }

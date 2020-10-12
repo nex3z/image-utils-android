@@ -9,13 +9,13 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.fragment.app.Fragment
 import com.nex3z.android.utils.image.camera.CameraFragment
-import com.nex3z.android.utils.image.convert.YuvToRgbConverter
+import com.nex3z.android.utils.image.convert.RsYuvToRgbConverter
 import com.nex3z.android.utils.image.util.Timer
 import kotlinx.android.synthetic.main.activity_camera.*
 import timber.log.Timber
 
 class CameraActivity : AppCompatActivity(), ImageAnalysis.Analyzer {
-    private lateinit var rgbConverter: YuvToRgbConverter
+    private lateinit var rgbConverter: RsYuvToRgbConverter
     private lateinit var imageBuffer: Bitmap
     private var rotationDegrees: Int = 0
     private val rotateMatrix: Matrix = Matrix()
@@ -34,7 +34,7 @@ class CameraActivity : AppCompatActivity(), ImageAnalysis.Analyzer {
     }
 
     private fun init() {
-        rgbConverter = YuvToRgbConverter(this)
+        rgbConverter = RsYuvToRgbConverter(this)
     }
 
     @SuppressLint("UnsafeExperimentalUsageError")

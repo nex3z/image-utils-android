@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.renderscript.*
 
-class HistogramCalculator(context: Context) {
+class RsHistogramCalculator(context: Context) {
     private val rs = RenderScript.create(context)
     private lateinit var script: ScriptIntrinsicHistogram
     private lateinit var outputAllocation: Allocation
@@ -24,7 +24,7 @@ class HistogramCalculator(context: Context) {
     }
 
     companion object {
-        private val TAG: String = HistogramCalculator::class.java.simpleName
+        private val TAG: String = RsHistogramCalculator::class.java.simpleName
         const val COLOR_DEPTH = 256
         const val NUM_CHANNELS = 4
 

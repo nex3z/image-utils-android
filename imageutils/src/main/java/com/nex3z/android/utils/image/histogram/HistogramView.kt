@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 
 class HistogramView(
@@ -16,16 +15,15 @@ class HistogramView(
     private val redPaint: Paint = buildPaint(Color.RED)
     private val greenPaint: Paint = buildPaint(Color.GREEN)
     private val bluePaint: Paint = buildPaint(Color.BLUE)
-    private var histogram: Histogram? = null
+    private var histogram: IntArray? = null
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         if (canvas == null) { return }
         histogram?.run {
-            val maxValue = maxOf(redBins.max(), greenBins.max(), blueBins.max())
-            draw(canvas, redPaint, redBins, maxValue)
-            draw(canvas, greenPaint, greenBins, maxValue)
-            draw(canvas, bluePaint, blueBins, maxValue)
+            draw(canvas, redPaint, slice(0 until size step 4))
+            draw(canvas, greenPaint, slice(1 until size step 4))
+            draw(canvas, bluePaint, slice(2 until size step 4))
         }
     }
 
@@ -42,15 +40,17 @@ class HistogramView(
         setMeasuredDimension(widthSpecs, heightSpecs)
     }
 
-    private fun draw(canvas: Canvas, paint: Paint, color: FloatArray, maxValue: Float) {
+    private fun draw(canvas: Canvas, paint: Paint, color: List<Int>) {
         Path().apply {
             moveTo(paddingLeft.toFloat(), height - paddingBottom.toFloat())
 
             val graphWidth = width - paddingLeft - paddingRight
             val graphHeight = height - paddingTop - paddingBottom
+            val maxValue = color.maxOrNull()?.toFloat() ?: return
+            val numColor = color.size.toFloat()
 
             for (i in color.indices) {
-                val x = (graphWidth * i.toFloat() / color.size) + paddingLeft
+                val x = (graphWidth * i.toFloat() / numColor) + paddingLeft
                 val y = (graphHeight - (graphHeight * color[i] / maxValue)) + paddingBottom
                 lineTo(x, y)
             }
@@ -58,9 +58,8 @@ class HistogramView(
         }
     }
 
-    fun render(hist: Histogram) {
+    fun render(hist: IntArray) {
         this.histogram = hist
-        Log.v("XXX", "hist = $hist")
         invalidate()
     }
 
@@ -70,8 +69,5 @@ class HistogramView(
             style = Paint.Style.STROKE
             strokeWidth = 2f
         }
-
-        private fun FloatArray.max() = this.maxOrNull()
-            ?: throw IllegalArgumentException("Array cannot be empty")
     }
 }

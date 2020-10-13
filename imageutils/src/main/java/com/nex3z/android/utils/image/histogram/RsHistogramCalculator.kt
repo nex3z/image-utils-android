@@ -6,14 +6,16 @@ import android.renderscript.*
 
 class RsHistogramCalculator(context: Context) {
     private val rs = RenderScript.create(context)
-    private lateinit var script: ScriptIntrinsicHistogram
+
+    private val script: ScriptIntrinsicHistogram by lazy {
+        ScriptIntrinsicHistogram.create(rs, Element.U8_4(rs))
+    }
+
     private lateinit var outputAllocation: Allocation
 
     fun compute(bitmap: Bitmap, hist: IntArray) {
         val inputAllocation = Allocation.createFromBitmap(rs, bitmap)
-        if (!this::script.isInitialized) {
-            script = ScriptIntrinsicHistogram.create(rs, inputAllocation.element)
-        }
+
         if (!this::outputAllocation.isInitialized) {
             outputAllocation = Allocation.createSized(rs, Element.I32_4(rs), COLOR_DEPTH)
         }
@@ -24,7 +26,6 @@ class RsHistogramCalculator(context: Context) {
     }
 
     companion object {
-        private val TAG: String = RsHistogramCalculator::class.java.simpleName
         const val COLOR_DEPTH = 256
         const val NUM_CHANNELS = 4
 

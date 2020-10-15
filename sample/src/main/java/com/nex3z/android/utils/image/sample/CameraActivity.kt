@@ -9,15 +9,15 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.fragment.app.Fragment
 import com.nex3z.android.utils.image.camera.CameraFragment
-import com.nex3z.android.utils.image.convert.RsRgbToGreyScaleConverter
 import com.nex3z.android.utils.image.convert.RsYuvToRgbConverter
+import com.nex3z.android.utils.image.processor.RsRgbToGreyScaleProcessor
 import com.nex3z.android.utils.image.util.Timer
 import kotlinx.android.synthetic.main.activity_camera.*
 import timber.log.Timber
 
 class CameraActivity : AppCompatActivity(), ImageAnalysis.Analyzer {
     private lateinit var rgbConverter: RsYuvToRgbConverter
-    private lateinit var greyScaleConverter: RsRgbToGreyScaleConverter
+    private lateinit var greyScaleProcessor: RsRgbToGreyScaleProcessor
     private lateinit var rgbImageBuffer: Bitmap
     private lateinit var greyScaleImageBuffer: Bitmap
     private var rotationDegrees: Int = 0
@@ -38,7 +38,7 @@ class CameraActivity : AppCompatActivity(), ImageAnalysis.Analyzer {
 
     private fun init() {
         rgbConverter = RsYuvToRgbConverter(this)
-        greyScaleConverter = RsRgbToGreyScaleConverter(this)
+        greyScaleProcessor = RsRgbToGreyScaleProcessor(this)
     }
 
     @SuppressLint("UnsafeExperimentalUsageError")
@@ -55,7 +55,7 @@ class CameraActivity : AppCompatActivity(), ImageAnalysis.Analyzer {
             val timer = Timer()
             rgbConverter.yuvToRgb(it, rgbImageBuffer)
             Timber.v("analyze(): rgb convert time cost = ${timer.delta()}")
-            greyScaleConverter.convert(rgbImageBuffer, greyScaleImageBuffer)
+            greyScaleProcessor.process(rgbImageBuffer, greyScaleImageBuffer)
             Timber.v("analyze(): grey scale convert time cost = ${timer.delta()}")
 
             iv_ac_rgb.post {

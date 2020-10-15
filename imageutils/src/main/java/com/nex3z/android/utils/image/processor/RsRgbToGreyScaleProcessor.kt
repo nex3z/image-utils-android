@@ -1,4 +1,4 @@
-package com.nex3z.android.utils.image.convert
+package com.nex3z.android.utils.image.processor
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -6,7 +6,7 @@ import android.renderscript.Allocation
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicColorMatrix
 
-class RsRgbToGreyScaleConverter(context: Context) {
+class RsRgbToGreyScaleProcessor(context: Context) : BitmapProcessor {
     private val rs = RenderScript.create(context)
 
     private val script: ScriptIntrinsicColorMatrix by lazy {
@@ -17,14 +17,14 @@ class RsRgbToGreyScaleConverter(context: Context) {
 
     private lateinit var outputAllocation: Allocation
 
-    fun convert(rgb: Bitmap, greyScale: Bitmap) {
-        val inputAllocation = Allocation.createFromBitmap(rs, rgb)
+    override fun process(image: Bitmap, processed: Bitmap) {
+        val inputAllocation = Allocation.createFromBitmap(rs, image)
 
         if (!this::outputAllocation.isInitialized) {
             outputAllocation = Allocation.createTyped(rs, inputAllocation.type)
         }
 
         script.forEach(inputAllocation, outputAllocation)
-        outputAllocation.copyTo(greyScale)
+        outputAllocation.copyTo(processed)
     }
 }

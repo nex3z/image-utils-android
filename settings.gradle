@@ -1,3 +1,5 @@
 include ':image-utils'
+include ':image-utils-cv'
+include ':openCVLibrary3412'
 include ':sample'
 rootProject.name = "image-utils-android"

@@ -8,18 +8,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.fragment.app.Fragment
+import com.nex3z.android.utils.cv.processor.CvBilateralFilterProcessor
 import com.nex3z.android.utils.image.camera.CameraFragment
 import com.nex3z.android.utils.image.convert.RsYuvToRgbConverter
-import com.nex3z.android.utils.image.processor.RsRgbToGreyScaleProcessor
+import com.nex3z.android.utils.image.processor.BitmapProcessor
 import com.nex3z.android.utils.image.util.Timer
 import kotlinx.android.synthetic.main.activity_camera.*
 import timber.log.Timber
 
 class CameraActivity : AppCompatActivity(), ImageAnalysis.Analyzer {
     private lateinit var rgbConverter: RsYuvToRgbConverter
-    private lateinit var greyScaleProcessor: RsRgbToGreyScaleProcessor
-    private lateinit var rgbImageBuffer: Bitmap
-    private lateinit var greyScaleImageBuffer: Bitmap
+    private lateinit var processor: BitmapProcessor
+    private lateinit var rgbBuffer: Bitmap
+    private lateinit var processedBuffer: Bitmap
     private var rotationDegrees: Int = 0
     private val rotateMatrix: Matrix = Matrix()
 
@@ -38,14 +39,14 @@ class CameraActivity : AppCompatActivity(), ImageAnalysis.Analyzer {
 
     private fun init() {
         rgbConverter = RsYuvToRgbConverter(this)
-        greyScaleProcessor = RsRgbToGreyScaleProcessor(this)
+        processor = CvBilateralFilterProcessor()
     }
 
     @SuppressLint("UnsafeExperimentalUsageError")
     override fun analyze(image: ImageProxy) {
-        if (!::rgbImageBuffer.isInitialized) {
-            rgbImageBuffer = Bitmap.createBitmap(image.width, image.height, Bitmap.Config.ARGB_8888)
-            greyScaleImageBuffer = Bitmap.createBitmap(image.width, image.height, Bitmap.Config.ARGB_8888)
+        if (!::rgbBuffer.isInitialized) {
+            rgbBuffer = Bitmap.createBitmap(image.width, image.height, Bitmap.Config.ARGB_8888)
+            processedBuffer = Bitmap.createBitmap(image.width, image.height, Bitmap.Config.ARGB_8888)
             rotationDegrees = image.imageInfo.rotationDegrees
             rotateMatrix.postRotate(image.imageInfo.rotationDegrees.toFloat())
             Timber.v("analyze(): image size = ${image.width} x ${image.height}, rotationDegrees = $rotationDegrees")
@@ -53,14 +54,14 @@ class CameraActivity : AppCompatActivity(), ImageAnalysis.Analyzer {
 
         image.image?.let {
             val timer = Timer()
-            rgbConverter.yuvToRgb(it, rgbImageBuffer)
+            rgbConverter.yuvToRgb(it, rgbBuffer)
             Timber.v("analyze(): rgb convert time cost = ${timer.delta()}")
-            greyScaleProcessor.process(rgbImageBuffer, greyScaleImageBuffer)
+            processor.process(rgbBuffer, processedBuffer)
             Timber.v("analyze(): grey scale convert time cost = ${timer.delta()}")
 
             iv_ac_rgb.post {
-                iv_ac_rgb.setImageBitmap(rotate(rgbImageBuffer))
-                iv_ac_grey.setImageBitmap(rotate(greyScaleImageBuffer))
+                iv_ac_rgb.setImageBitmap(rotate(rgbBuffer))
+                iv_ac_grey.setImageBitmap(rotate(processedBuffer))
             }
         }
 

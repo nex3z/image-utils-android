@@ -17,14 +17,14 @@ class RsRgbToGreyScaleProcessor(context: Context) : BitmapProcessor {
 
     private lateinit var outputAllocation: Allocation
 
-    override fun process(image: Bitmap, processed: Bitmap) {
-        val inputAllocation = Allocation.createFromBitmap(rs, image)
+    override fun process(src: Bitmap, dst: Bitmap) {
+        val inputAllocation = Allocation.createFromBitmap(rs, src)
 
         if (!this::outputAllocation.isInitialized) {
             outputAllocation = Allocation.createTyped(rs, inputAllocation.type)
         }
 
         script.forEach(inputAllocation, outputAllocation)
-        outputAllocation.copyTo(processed)
+        outputAllocation.copyTo(dst)
     }
 }

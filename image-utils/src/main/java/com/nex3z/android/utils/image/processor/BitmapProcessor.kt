@@ -4,6 +4,6 @@ import android.graphics.Bitmap
 
 interface BitmapProcessor {
 
-    fun process(image: Bitmap, processed: Bitmap)
+    fun process(src: Bitmap, dst: Bitmap)
 
 }
